@@ -1,7 +1,7 @@
 import os
 import uuid
 from typing import List, Optional, Dict, Any
-from fastapi import FastAPI, UploadFile, File, HTTPException, Query
+from fastapi import FastAPI, UploadFile, File, HTTPException, Query, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
@@ -9,6 +9,7 @@ from pydantic import BaseModel
 from .search_index import DocIndex
 from .insights import build_insights_payload, generate_insights_from_selection
 from .tts import synthesize_podcast
+from .llm_adapter import gemini_complete
 
 # ---------- ENV ----------
 ADOBE_EMBED_API_KEY = os.getenv("ADOBE_EMBED_API_KEY", "")
@@ -42,6 +43,10 @@ class AnalyzeSelectionReq(BaseModel):
 class PodcastReq(BaseModel):
     script: str
     speaker_mode: str = "duo"  # "duo" or "single"
+
+class ChatQuery(BaseModel):
+    question: str
+    pdf_name: str
 
 # ---------- ROUTES ----------
 @app.get("/health")
@@ -116,3 +121,45 @@ def generate_podcast(req: PodcastReq):
         provider=TTS_PROVIDER  # "azure"
     )
     return {"audio": f"/files/{out_name}", "transcript": req.script}
+
+# ---------- NEW CHAT ENDPOINTS ----------
+@app.post("/chat/ask")
+async def ask_pdf(query: ChatQuery):
+    """Ask a question about a specific PDF using Gemini"""
+    try:
+        # Get the PDF content for context
+        pdf_path = os.path.join(UPLOAD_DIR, query.pdf_name.replace("/", "_"))
+        if not os.path.exists(pdf_path):
+            raise HTTPException(404, "PDF not found")
+        
+        # Use our existing Gemini integration
+        system_prompt = f"""You are a helpful assistant answering questions about a PDF document. 
+        Answer based ONLY on the content of the PDF: {query.pdf_name}
+        Be concise, accurate, and helpful. If the question cannot be answered from the PDF content, say so."""
+        
+        user_prompt = f"Question: {query.question}\n\nPlease answer based on the PDF content."
+        
+        answer = gemini_complete(system_prompt=system_prompt, user_prompt=user_prompt)
+        
+        return {"answer": answer, "pdf_name": query.pdf_name, "question": query.question}
+        
+    except Exception as e:
+        raise HTTPException(500, f"Error processing question: {str(e)}")
+
+@app.post("/chat/speak")
+async def speak_answer(text: str = Form(...)):
+    """Convert text answer to speech using Azure TTS"""
+    try:
+        out_name = f"chat_answer_{uuid.uuid4().hex}.mp3"
+        out_path = os.path.join(UPLOAD_DIR, out_name)
+        
+        synthesize_podcast(
+            script=text,
+            out_path=out_path,
+            provider=TTS_PROVIDER
+        )
+        
+        return {"audio": f"/files/{out_name}", "text": text}
+        
+    except Exception as e:
+        raise HTTPException(500, f"Error generating speech: {str(e)}")

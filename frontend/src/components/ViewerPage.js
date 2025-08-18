@@ -11,6 +11,12 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
   const [manualText, setManualText] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  
+  // Chat functionality
+  const [question, setQuestion] = useState("");
+  const [chatAnswer, setChatAnswer] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
+  const [audioUrl, setAudioUrl] = useState("");
 
   // Wrap analyze function in useCallback to prevent infinite re-renders
   const analyze = useCallback(async (text) => {
@@ -30,6 +36,43 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
       setLoading(false);
     }
   }, [apiBase, fileName]);
+
+  // Chat function
+  const askQuestion = async () => {
+    if (!question.trim() || !fileName) return;
+    
+    setChatLoading(true);
+    setChatAnswer("");
+    setAudioUrl("");
+    
+    try {
+      // Ask Gemini about the PDF
+      const chatResponse = await axios.post(`${apiBase}/chat/ask`, {
+        question: question.trim(),
+        pdf_name: fileName
+      });
+      
+      setChatAnswer(chatResponse.data.answer);
+      
+      // Generate speech using Azure TTS
+      const ttsForm = new FormData();
+      ttsForm.append("text", chatResponse.data.answer);
+      
+      const ttsResponse = await axios.post(`${apiBase}/chat/speak`, ttsForm, {
+        responseType: "blob"
+      });
+      
+      const audioBlob = new Blob([ttsResponse.data], { type: "audio/mpeg" });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      setAudioUrl(audioUrl);
+      
+    } catch (e) {
+      console.error("Chat error:", e);
+      setChatAnswer("Sorry, I couldn't process your question. Please try again.");
+    } finally {
+      setChatLoading(false);
+    }
+  };
 
   // Load SDK once
   useEffect(() => {
@@ -128,11 +171,68 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
         )}
       </div>
 
-      {/* Right Panel: Manual fallback + results */}
+      {/* Right Panel: Chat + Insights */}
       <div style={{ borderLeft: "1px solid #eee", padding: 12, overflowY: "auto" }}>
-        <h3>Insights</h3>
+        {/* Chat Section */}
+        <div style={{ marginBottom: 24, padding: 16, background: "#f8f9fa", borderRadius: 8 }}>
+          <h3>💬 Chat with PDF</h3>
+          <div style={{ marginBottom: 12 }}>
+            <input
+              type="text"
+              placeholder="Ask a question about this PDF..."
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              style={{ 
+                width: "100%", 
+                padding: "8px 12px", 
+                border: "1px solid #ddd", 
+                borderRadius: 4,
+                marginBottom: 8
+              }}
+              onKeyPress={(e) => e.key === "Enter" && askQuestion()}
+            />
+            <button 
+              onClick={askQuestion} 
+              disabled={chatLoading || !question.trim()}
+              style={{
+                background: "#007bff",
+                color: "white",
+                border: "none",
+                padding: "8px 16px",
+                borderRadius: 4,
+                cursor: "pointer"
+              }}
+            >
+              {chatLoading ? "Thinking..." : "Ask Question"}
+            </button>
+          </div>
+          
+          {chatAnswer && (
+            <div style={{ marginTop: 16 }}>
+              <h4>🤖 Answer:</h4>
+              <div style={{ 
+                background: "white", 
+                padding: 12, 
+                borderRadius: 4, 
+                border: "1px solid #ddd",
+                marginBottom: 8
+              }}>
+                {chatAnswer}
+              </div>
+              
+              {audioUrl && (
+                <div>
+                  <h5>🔊 Audio Answer:</h5>
+                  <audio controls src={audioUrl} style={{ width: "100%" }} />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
+        {/* Insights Section */}
         <div style={{ marginBottom: 12 }}>
+          <h3>🧠 Text Analysis</h3>
           <label>Paste selection (fallback if text selection isn't detected):</label>
           <textarea
             rows={5}
