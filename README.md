@@ -1,5 +1,4 @@
 # Document Insight & Engagement System
-
 A sophisticated PDF analysis platform that uses Adobe PDF Embed API, AI insights, and podcast generation.
 
 ## 🚀 Quick Start
@@ -11,16 +10,15 @@ A sophisticated PDF analysis platform that uses Adobe PDF Embed API, AI insights
 
 ### 1. Clone/Download Project
 ```bash
-git clone https://github.com/YOUR_USERNAME/adobe-finale.git
-cd adobe-finale
+git clone https://github.com/Adithi-Garipelly/Adobe_Finale_.git
+cd Adobe_Finale_
 ```
 
 ### 2. Set Up Environment Variables
 Create `frontend/.env` file:
 ```env
+REACT_APP_API=http://localhost:8000
 REACT_APP_ADOBE_EMBED_API_KEY=YOUR_API_KEY_HERE
-REACT_APP_API_BASE_URL=http://localhost:8000
-REACT_APP_BACKEND_URL=http://localhost:8000
 ```
 
 ### 3. Install Dependencies
@@ -54,48 +52,53 @@ npm start
 
 ## 📱 How to Use
 
-1. **Upload PDFs** - Select multiple PDF files
-2. **View PDFs** - Click "View" on any uploaded file
-3. **Select Text** - Highlight text in PDF or paste manually
-4. **Generate Insights** - Get AI analysis with 5 structured sections
-5. **Create Podcast** - Generate audio + transcript
+1. **Upload PDFs** - Select multiple PDF files (up to 50)
+2. **View Library** - See all uploaded PDFs
+3. **Open PDF** - Click "Open" on any file to view in Adobe PDF Embed API
+4. **Select Text** - Highlight text in PDF or paste manually
+5. **Generate Insights** - Get AI analysis with relevant sections and insights
+6. **Create Podcast** - Generate audio + transcript using Azure TTS
 
 ## 🔧 Features
 
-- ✅ Multiple PDF upload and management
+- ✅ Multiple PDF upload and management (up to 50 files)
 - ✅ Adobe PDF Embed API (no iframes)
-- ✅ AI-powered text analysis
-- ✅ Cross-document insights
+- ✅ AI-powered text analysis with Gemini 2.5 Flash
+- ✅ Cross-document insights and semantic search
 - ✅ Podcast generation with Azure TTS
-- ✅ Semantic search with FAISS
-- ✅ Clean, modern UI
+- ✅ FAISS vector search with sentence transformers
+- ✅ Clean, modern UI with page-based navigation
 
 ## 🛠️ Tech Stack
 
 - **Backend**: Python + FastAPI + Uvicorn
-- **Frontend**: React + Styled Components
+- **Frontend**: React + Axios
 - **PDF Viewer**: Adobe PDF Embed API
-- **AI**: Google Gemini 2.5 Flash + OpenAI
+- **AI**: Google Gemini 2.5 Flash
 - **TTS**: Azure Cognitive Services
 - **Search**: FAISS + Sentence Transformers
+- **PDF Processing**: pdfminer.six
 
 ## 📁 Project Structure
 
 ```
-Adobe_Round3/
+Adobe_Finale_/
 ├── backend/
 │   ├── app/
-│   │   ├── main.py          # FastAPI app
-│   │   ├── semantic.py      # Search & indexing
-│   │   ├── llm_adapter.py   # AI integration
-│   │   ├── tts_adapter.py   # Text-to-speech
-│   │   └── indexer.py       # File management
+│   │   ├── main.py          # FastAPI app with new endpoints
+│   │   ├── search_index.py  # FAISS-based semantic search
+│   │   ├── insights.py      # AI insights generation
+│   │   ├── llm_adapter.py   # Gemini integration
+│   │   └── tts.py          # Azure TTS integration
 │   ├── requirements.txt
 │   └── data/                # Uploaded PDFs
 ├── frontend/
 │   ├── src/
 │   │   ├── components/      # React components
-│   │   └── App.js          # Main app
+│   │   │   ├── UploadPage.js    # File upload (up to 50)
+│   │   │   ├── LibraryPage.js   # File library
+│   │   │   └── ViewerPage.js    # PDF viewer + insights
+│   │   └── App.js          # Main app with page routing
 │   ├── package.json
 │   └── .env                 # Environment variables
 └── README.md
@@ -131,9 +134,18 @@ If you encounter issues:
 This system demonstrates:
 - Modern web development with React + FastAPI
 - Adobe PDF Embed API integration
-- AI-powered document analysis
+- AI-powered document analysis with Gemini
 - Cross-document insights generation
-- Podcast creation from text
+- Podcast creation from text with Azure TTS
 - Professional UI/UX design
+
+## 🔄 Recent Updates
+
+- **Improved Backend**: New FAISS-based semantic search with better sectioning
+- **Enhanced Frontend**: Page-based navigation with upload, library, and viewer
+- **Better PDF Handling**: Support for up to 50 files with improved indexing
+- **Robust Text Selection**: Adobe PDF Embed API with manual fallback
+- **Structured Insights**: AI-generated analysis with relevant sections
+- **Azure TTS Integration**: High-quality podcast generation
 
 Happy coding! 🚀
