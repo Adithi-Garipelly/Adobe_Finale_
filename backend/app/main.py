@@ -14,6 +14,7 @@ from .search_index import DocIndex
 from .insights import build_insights_payload, generate_insights_from_selection
 from .tts import synthesize_podcast
 from .llm_adapter import gemini_complete
+from .podcast import router as podcast_router
 
 # ---------- ENV ----------
 ADOBE_EMBED_API_KEY = os.getenv("ADOBE_EMBED_API_KEY", "")
@@ -125,6 +126,9 @@ def generate_podcast(req: PodcastReq):
         provider=TTS_PROVIDER  # "azure"
     )
     return {"audio": f"/files/{out_name}", "transcript": req.script}
+
+# Include podcast router
+app.include_router(podcast_router, prefix="/podcast", tags=["podcast"])
 
 # ---------- NEW CHAT ENDPOINTS ----------
 @app.post("/chat/ask")

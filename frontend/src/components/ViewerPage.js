@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
+import PodcastGenerator from "./PodcastGenerator";
 
 const ADOBE_KEY = process.env.REACT_APP_ADOBE_EMBED_API_KEY; // put in .env
 const SDK_URL = "https://documentcloud.adobe.com/view-sdk/main.js";
@@ -416,7 +417,13 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
               </div>
             )}
 
-            {/* Podcast Generation */}
+            {/* Enhanced Podcast Generation */}
+            <PodcastGenerator 
+              insights={result.analysis_metadata} 
+              apiBase={apiBase}
+            />
+            
+            {/* Original Podcast Generation */}
             <div style={{ marginTop: 20, padding: 16, background: "#f8f9fa", borderRadius: 8 }}>
               <h4>🎙️ Generate Research Podcast</h4>
               <p style={{ fontSize: "13px", color: "#666", marginBottom: 12 }}>
