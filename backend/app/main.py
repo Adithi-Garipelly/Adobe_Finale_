@@ -6,6 +6,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
 from .search_index import DocIndex
 from .insights import build_insights_payload, generate_insights_from_selection
 from .tts import synthesize_podcast

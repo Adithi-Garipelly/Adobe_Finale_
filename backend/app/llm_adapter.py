@@ -2,14 +2,15 @@ import os
 from typing import Optional
 import google.generativeai as genai
 
-# Requires GOOGLE_APPLICATION_CREDENTIALS to be mounted to /credentials/<...>.json
-# and env vars: LLM_PROVIDER=gemini, GEMINI_MODEL=gemini-2.5-flash
-
+# Use GEMINI_API_KEY environment variable
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 def _ensure_client():
-    # The SDK reads GOOGLE_APPLICATION_CREDENTIALS automatically
-    genai.configure()  # no args needed if env is present
+    # Configure Gemini with API key
+    if not GEMINI_API_KEY:
+        raise RuntimeError("GEMINI_API_KEY environment variable not set")
+    genai.configure(api_key=GEMINI_API_KEY)
 
 def gemini_complete(system_prompt: str, user_prompt: str) -> str:
     _ensure_client()

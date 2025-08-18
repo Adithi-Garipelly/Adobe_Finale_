@@ -3,6 +3,7 @@ from typing import Literal
 import azure.cognitiveservices.speech as speechsdk
 
 AZURE_TTS_KEY = os.getenv("AZURE_TTS_KEY", "")
+AZURE_TTS_REGION = os.getenv("AZURE_TTS_REGION", "")
 AZURE_TTS_ENDPOINT = os.getenv("AZURE_TTS_ENDPOINT", "")
 
 def synthesize_podcast(script: str, out_path: str, provider: Literal["azure"]="azure"):
@@ -10,8 +11,8 @@ def synthesize_podcast(script: str, out_path: str, provider: Literal["azure"]="a
         # Extend here for "local" if desired
         raise RuntimeError("Only Azure TTS is configured in this build.")
 
-    if not AZURE_TTS_KEY or not AZURE_TTS_ENDPOINT:
-        raise RuntimeError("Azure TTS ENV not set (AZURE_TTS_KEY, AZURE_TTS_ENDPOINT).")
+    if not AZURE_TTS_KEY or not AZURE_TTS_REGION:
+        raise RuntimeError("Azure TTS ENV not set (AZURE_TTS_KEY, AZURE_TTS_REGION).")
 
     # Choose two voices for duo; otherwise single voice
     # You can tune these for gender/accent variety
@@ -34,7 +35,7 @@ def synthesize_podcast(script: str, out_path: str, provider: Literal["azure"]="a
         chunks.append((cur_voice, text))
 
     # SSML per chunk → stitch by appending to single file (SDK handles stream)
-    speech_config = speechsdk.SpeechConfig(subscription=AZURE_TTS_KEY, endpoint=AZURE_TTS_ENDPOINT)
+    speech_config = speechsdk.SpeechConfig(subscription=AZURE_TTS_KEY, region=AZURE_TTS_REGION)
     audio_config = speechsdk.audio.AudioOutputConfig(filename=out_path)
     synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config, audio_config=audio_config)
 
