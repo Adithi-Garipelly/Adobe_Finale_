@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 
 const ADOBE_KEY = process.env.REACT_APP_ADOBE_EMBED_API_KEY; // put in .env
@@ -11,6 +11,25 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
   const [manualText, setManualText] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // Wrap analyze function in useCallback to prevent infinite re-renders
+  const analyze = useCallback(async (text) => {
+    setLoading(true);
+    setResult(null);
+    try {
+      const { data } = await axios.post(`${apiBase}/analyze_selection`, {
+        current_pdf: fileName,
+        selected_text: text,
+        max_sections: 5,
+      });
+      setResult(data);
+    } catch (e) {
+      console.error(e);
+      setError("Analysis failed");
+    } finally {
+      setLoading(false);
+    }
+  }, [apiBase, fileName]);
 
   // Load SDK once
   useEffect(() => {
@@ -75,25 +94,7 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
       }
     }
     initViewer();
-  }, [adobeReady, apiBase, fileName]);
-
-  async function analyze(text) {
-    setLoading(true);
-    setResult(null);
-    try {
-      const { data } = await axios.post(`${apiBase}/analyze_selection`, {
-        current_pdf: fileName,
-        selected_text: text,
-        max_sections: 5,
-      });
-      setResult(data);
-    } catch (e) {
-      console.error(e);
-      setError("Analysis failed");
-    } finally {
-      setLoading(false);
-    }
-  }
+  }, [adobeReady, apiBase, fileName, analyze]);
 
   async function generatePodcast() {
     if (!result?.podcast_script) return;
