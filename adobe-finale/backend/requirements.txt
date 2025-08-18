@@ -1,0 +1,29 @@
+# Core FastAPI dependencies
+fastapi>=0.110.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.7.0
+python-multipart>=0.0.6
+aiofiles>=23.2.1
+
+# PDF processing
+pypdf>=4.2.0
+regex>=2023.12.25
+
+# AI and machine learning
+faiss-cpu>=1.8.0
+sentence-transformers>=2.7.0
+numpy>=1.26.0
+scikit-learn>=1.4.0
+torch>=2.0.0
+transformers>=4.30.0
+
+# LLM providers
+google-generativeai>=0.8.5
+openai>=1.40.0
+
+# Text-to-Speech
+azure-cognitiveservices-speech>=1.37.0
+
+# Utilities
+python-dotenv>=1.0.0
+python-dateutil>=2.8.0

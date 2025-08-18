@@ -1,0 +1,191 @@
+[
+  {
+    "id": "92b1e24cda5347bfa712fabbe2d268a9",
+    "doc_id": "c495e47eb6ed46a4998ce9fbaa1d149f",
+    "doc_name": "_Web_development_3sha_20250818_104544.pdf",
+    "heading": "Web Development",
+    "content": "Welcome to an in-depth exploration of the essential components that make up the world of web development. From the foundational markup language HTML to the dynamic interactivity of JavaScript, well dive into the key technologies that power the modern web. by Adithi Garipelly",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "9759d0b35ff94ae7a31c2b6d93a99cd4",
+    "doc_id": "c495e47eb6ed46a4998ce9fbaa1d149f",
+    "doc_name": "_Web_development_3sha_20250818_104544.pdf",
+    "heading": "Conclusion and Next Steps",
+    "content": "Weve covered the fundamental building blocks of web development, from the structure and styling of web pages to the dynamic interactivity and server-side functionality. Now its time to take the next step and dive deeper into these technologies to turn your web development dreams into reality.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "b1eb652877b445c5a4e772456df43044",
+    "doc_id": "92b03ba42df04eb1a0a54ab9110324b0",
+    "doc_name": "_Web_development_3sha_20250818_104557.pdf",
+    "heading": "Web Development",
+    "content": "Welcome to an in-depth exploration of the essential components that make up the world of web development. From the foundational markup language HTML to the dynamic interactivity of JavaScript, well dive into the key technologies that power the modern web. by Adithi Garipelly",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "bde7651ca8d94ffc8d72456bad8742ae",
+    "doc_id": "92b03ba42df04eb1a0a54ab9110324b0",
+    "doc_name": "_Web_development_3sha_20250818_104557.pdf",
+    "heading": "Conclusion and Next Steps",
+    "content": "Weve covered the fundamental building blocks of web development, from the structure and styling of web pages to the dynamic interactivity and server-side functionality. Now its time to take the next step and dive deeper into these technologies to turn your web development dreams into reality.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "4fe8185933a64af4920593cdc80daca3",
+    "doc_id": "cc71052933224489a64da838c66edbc8",
+    "doc_name": "_Web_development_3sha_20250818_104746.pdf",
+    "heading": "Web Development",
+    "content": "Welcome to an in-depth exploration of the essential components that make up the world of web development. From the foundational markup language HTML to the dynamic interactivity of JavaScript, well dive into the key technologies that power the modern web. by Adithi Garipelly",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "66bf7e89a1814a88a99afb87e3fc81c1",
+    "doc_id": "cc71052933224489a64da838c66edbc8",
+    "doc_name": "_Web_development_3sha_20250818_104746.pdf",
+    "heading": "Conclusion and Next Steps",
+    "content": "Weve covered the fundamental building blocks of web development, from the structure and styling of web pages to the dynamic interactivity and server-side functionality. Now its time to take the next step and dive deeper into these technologies to turn your web development dreams into reality.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "c724900ccff147a688732dc27b553c8b",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Introduction",
+    "content": "Congratulations on making it to the Finale! In Rounds 1A  1B, you built: - Round 1A  A robust PDF understanding engine. - Round 1B  A persona-driven document intelligence system. Now, its time to turn those brains into a real, interactive user experience.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "f3be211342da45378e21ecfe78245c9b",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "User Journey – Document Insight & Engagement System",
+    "content": "1. Context  Problem Users (e.g., researchers, students, professionals) deal with large volumes of documents daily  research papers, business reports, study material, etc. Over time, it becomes impossible to remember all details or connect insights across these documents. 2. Goal of the System Help users by:  Quickly surfacing related, overlapping, contradicting, examples or other insightful information from their personal document library.  Using AILLM-powered capabilities to enhance understanding and engagement  grounded on the documents theyve read. 3. Journey Flow",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "85c071b7092b48ff87e7a1fa578f5dfa",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Step 1 – Reading & Selection",
+    "content": "Trigger: User is reading a document within the system.  Action: User selects a portion of text (e.g., a scientific method, a business strategy, a key metric).  System Response: Instantly surfaces relevant sections from past documents in the users library. Uses semantic search and optionally an LLM to ensure context-aware matching. Speed and quality is important for user engagement.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "6733960158034202bd8c4989ca959889",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Step 2 – Insight Generation",
+    "content": "Goal: Go beyond finding related text.  System adds value by: Generate insights related to the selected text. E.g. overlapping, contradictory viewpoints, examples, or other insights. Offering contextual insights that enrich understanding. Grounding all results in documents the user has actually read (uploaded)  not generic web sources.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "491dac101f904ff788c96688f4591dce",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Step 3 – Rich Media Experience",
+    "content": "Optional Action: User requests an audio overview  podcast for the selected topic.  System Capabilities: Generate a natural-sounding, engaging audio overview of the topic using the selected text as a seed. Pull content from users documents to maintain trust and accuracy. Structure audio for easy listening  highlights key points, contrasts perspectives, and connects concepts. Making the audio overviewpodcast natural sounding, engaging, contextual, and grounded is key. 4. Key UX Considerations  Speed: Minimize delay between text selection and insight surfacing  keeps user engaged.  Relevance: High-relevance matches ensure trust in the system.  Engagement: Audio should be natural and dynamic, not robotic.  Extensibility: Users can explore beyond core tasks (bonus features) while staying aligned with the main flow. 5. Example Use Case A researcher reading a paper on neural network training techniques selects a paragraph on transfer learning. The system instantly shows:  Similar methods in 3 previous papers.  Contradictory findings from another study. Or how another paper has extended the technique. Or how another paper has found problems with the technique.  An audio overview  podcast summarizing these related sections and insights for quick listening on the go.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "73e3d8284d23411daee661b439b5c7bd",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Your Mission",
+    "content": "Build a web-based PDF reading experience powered by your earlier work that: 1. Displays PDFs with full fidelity  zoompan. 2. Connects the dots  when the user selects some text, shows related sections and snippets from other PDFs. 3. Accelerates understanding by showing context-aware insights. 4. Adds Audio Overview  Podcast features for richer engagement.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "4d3804574dba4f1e816f3b8a2ed98eba",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "PDF Handling",
+    "content": "- Bulk Upload: User uploads multiple PDFs at once (represents past documents that the user have read). - Fresh Upload: User opens an additional new PDF (represents current document that the user is reading). - Display: Render PDFs at high fidelity (using PDF Embed API is preferred).",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "7f6bdb95fbbf4417be64a7ae2dc251e5",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Connecting the Dots",
+    "content": "- Identify  highlight upto 5 relevant sections across PDFs with high accuracy. - Sections  Just as was defined in Round 1A, the headings in a PDF logically break the PDF into a number of sections (heading along with their content) - Snippets  24 sentence extracts from the context of the section. Similar to how web- search results how relevant snippets along with the URL  Title. - When the user clicks a snippet, show the corresponding PDF and navigate to the relevant part of the PDF containing that section. Speed - Related sectionssnippets must load quickly after selection for better user engagement. - Ingestion speed for past documents follows earlier round limits.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "4bdbb6b18e9244ca88aa11d916fe105e",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Audio Overview / Podcast Mode (+5 points)",
+    "content": "- 2-5 min audio podcast (between 2 speakers) or audio overview(single speaker). Audio podcast is preferred but audio overviews are also acceptable. It should be based on: - Current section - Related sections - Insights from Bulb feature - Azure TTS for evaluation (Google TTSlocal allowed for development).",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "e9c7a56f39674cd4a62a8a2671e74ff0",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Clarifications from Jury Q&A",
+    "content": "- Snippets logic: Select text  system finds relevant sectionssnippets  user clicks to jump. - Connections: Automatic linking across PDFs based on semantic meaning (it will be judged for relevance). - Prompt bar: Not required; use context from selection (and surrounding text if needed) - LLM Usage: API calls allowed; Round 1B logic can be replaced. - Offline requirement: Only LLM, TTS, and Embed API may use internet. - Backend: Fully runnable in Docker (combined frontend  backend). - Performance: No strict execution limit; faster is better. - Model size: Preferably under 20 GB for Docker image size. How will your solution be built and run. The following docker command will be used to build the solution. docker build --platform linuxamd64 -t yourimageidentifier . The following docker command will be used to run your solution docker run v pathtocredentials:credentials -e",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "5dc1e02d70144092ae8afa86088df424",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "GEMINI_MODEL=gemini-2.5-flash -e TTS_PROVIDER=azure -e AZURE_TTS_KEY=TTS_KEY -e",
+    "content": "AZURE_TTS_ENDPOINTTTS_ENDPOINT -p 8080:8080 yourimageidentifier Running the above command should bring up an application accessible on http:localhost:8080 Note that making external LLMTTS calls is entirely optional, and candidates may choose any on-device solution(like ollama for LLM or festival for TTS) which does not make any external calls. However, if any external LLMTTS calls are required, they must use the environment variables(which will be passed by Adobe). This is to ensure that user credentialsAPI keys are not embedded inside the code in git repo.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "03b5b395e29d4f85a1ec1c1c1269f9be",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Sample Scripts",
+    "content": "LLM call: https:github.comrbabbar-adobesample- repoblobmainchat_with_llm.py  Generate Audio from text: https:github.comrbabbar-adobesample- repoblobmaingenerate_audio.py  Dependencies to be installed for the above: https:github.comrbabbar- adobesample-repoblobmainrequirements.txt Note that the generate_audio.py script generates mp3 file for a text. Multiple invocations of the script may be required to generate an audio podcast involving multiple speakers. For audio overviews(with a single speaker), a single invocation may be enough. Candidates are expected to include the above scripts in their code and make use of the their functions to make LLMTTS calls so that their solution work as expected in the evaluation. If the solution involves a non-python based solution, then a similar script in the other language may be used, if it respects the environment variables. Note that the evaluation will be done using Gemini-2.5-Flash for LLM, and Azure TTS. However, candidates may use other LLMTTS solutions which they have access to for local development and validation, as they are supported by the scripts above. Here are the list of environment variables along with the details Environment Variables which will be passed during evaluation.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "3ce73fafa7d444bbae9ae9f35ed769f3",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Optional, If you are using Adobe PDF",
+    "content": "Embed API, then this should be provided by the candidates while submitting their solution. LLM_PROVIDER gemini GOOGLE_APPLICATION_CREDEN TIALS Will be set by Adobe. GEMINI_MODEL gemini-2.5- flash TTS_PROVIDER azure",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "cfffbfabfb9f42938bf15145814bc92f",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Using Local LLM(using Ollama) and local TTS implementation.",
+    "content": "docker run -e ADOBE_EMBED_API_KEYADOBE_EMBED_API_KEY -e LLM_PROVIDERollama -e OLLAMA_MODEL llama3 -e TTS_PROVIDERlocal -p 8080:8080 yourimageidentifier Deliverables Submit by deadlines: 1. Working Prototype (Docker runnable, accessible on localhost:8080). 2. Private GitHub Repo with code, Dockerfile, README. 3. Pitch Deck (max 6 slides): Problem, solution, features, innovation, demo, impact. 4. 2-min demo video. 5. ADOBE_EMBED_API_KEY(optional, if using Adobe Embed API): to be submitted via form.",
+    "page_start": null,
+    "page_end": null
+  },
+  {
+    "id": "0a090c196e6d4a28ae91944498716bd4",
+    "doc_id": "260cc0c8c1ce46ba892d7d96920e1323",
+    "doc_name": "Adobe_Finale_Document_20250818_104809.pdf",
+    "heading": "Bonus: +5 for Insights Bulb, +5 for Podcast Mode",
+    "content": "8. Key Dates - Code Freeze: 19 Aug 2025 - Pitch Deck Deadline: 3 Sep 2025 - Finale Day: 5 Sep 2025 9. Pro Tips - Tell a story  show real persona impact. - Highlight magic moments in your demo. - Prepare metrics showing time saved  comprehension improved. - Rehearse until its smooth  predictable.",
+    "page_start": null,
+    "page_end": null
+  }
+]
