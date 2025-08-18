@@ -2,41 +2,125 @@ import os
 from typing import List, Dict, Any, Tuple
 from .llm_adapter import gemini_complete
 
-_SYSTEM_PROMPT = """You are a helpful research assistant. 
-You must stay strictly grounded in the provided material from the user's PDFs.
-Output three blocks:
-1) "Relevant Sections from Documents" with per-document bullets: (PDF name, page(s), heading, 2–4 sentence snippet).
-2) "Overall Insights (Summary & Connections)" with: definitions/overlaps, contradictions/challenges, examples/extensions.
-3) "Podcast Transcript" of ~2–3 minutes, 1 or 2 speakers, engaging but factual, grounded only in the provided snippets.
-Do NOT add outside sources or claims. If something is missing, say so succinctly.
+_SYSTEM_PROMPT = """You are an expert research analyst creating contextual insights across multiple PDF documents.
+
+Your task is to analyze selected text and find connections, contradictions, and extensions across the document library.
+
+Generate insights in this EXACT structure:
+
+1. DEFINITIONS & CORE CONCEPTS
+- Surface key definitions from relevant documents
+- Identify overlapping explanations
+- Note any conceptual evolution
+
+2. CONTRADICTORY FINDINGS & CHALLENGES
+- Highlight conflicting perspectives
+- Identify negative transfer or limitations
+- Note methodological disagreements
+
+3. EXAMPLES & APPLICATIONS
+- Find practical examples across documents
+- Identify use cases and implementations
+- Note domain-specific applications
+
+4. EVOLUTION & EXTENSIONS
+- Track concept development over time
+- Identify emerging trends or extensions
+- Note future research directions
+
+5. SYNTHESIS & CONNECTIONS
+- Summarize key insights
+- Connect findings across documents
+- Highlight research gaps
+
+IMPORTANT RULES:
+- Base ALL insights ONLY on the provided document snippets
+- Do NOT add external knowledge or web information
+- If something is missing, say "Not found in current documents"
+- Be specific and reference document names when possible
+- Focus on academic/research quality insights
+- Keep each section concise but comprehensive
 """
 
 def generate_insights_from_selection(selection: str, related: List[Dict[str, Any]]):
     # Build grounded context for Gemini
     context_blocks = []
     for r in related:
-        ctx = f"""PDF: {r['pdf']}
-Heading: {r['heading']}
-Pages: {r['page_start']}-{r['page_end']}
-Snippet: {r['snippet']}"""
+        ctx = f"""DOCUMENT: {r['pdf']}
+HEADING: {r['heading']}
+PAGES: {r['page_start']}-{r['page_end']}
+CONTENT: {r['snippet']}"""
         context_blocks.append(ctx)
-    context = "\n\n".join(context_blocks) if context_blocks else "No related sections found."
+    
+    context = "\n\n".join(context_blocks) if context_blocks else "No related sections found in current documents."
 
-    user_prompt = f"""User's selected text:
+    user_prompt = f"""SELECTED TEXT:
 \"\"\"{selection}\"\"\"
 
-Relevant sections (grounding):
+RELEVANT DOCUMENT SECTIONS (from your library):
 {context}
 
-Now produce:
-- Relevant Sections from Documents (structured).
-- Overall Insights (Summary & Connections).
-- Podcast Transcript (approx 2–3 mins, single or dual speaker)."""
+ANALYSIS TASK:
+Analyze the selected text in context of your entire PDF library. Find connections, contradictions, and extensions across documents.
+
+Generate insights that help researchers understand:
+- How this concept is defined across different sources
+- Where perspectives conflict or complement each other
+- How the concept has evolved or been extended
+- What examples and applications exist
+- How to synthesize findings across documents
+
+Focus on academic quality and research insights."""
 
     completion = gemini_complete(system_prompt=_SYSTEM_PROMPT, user_prompt=user_prompt)
-    # For convenience, re-use the same transcript as the podcast script
-    podcast_script = completion
+    
+    # Generate podcast script from insights
+    podcast_script = _create_podcast_script(selection, completion, related)
+    
     return completion, podcast_script
+
+def _create_podcast_script(selection: str, insights: str, related: List[Dict[str, Any]]) -> str:
+    """Create an engaging podcast script from the insights"""
+    
+    podcast_prompt = f"""Create an engaging 2-3 minute podcast script from these research insights.
+
+SELECTED TEXT: {selection}
+
+INSIGHTS: {insights}
+
+REQUIREMENTS:
+- Format as a conversation between Host and Co-host
+- Make it engaging and educational
+- Structure: Intro → Key Findings → Contradictions → Examples → Summary
+- Use natural, conversational language
+- Include specific document references when relevant
+- End with actionable insights for researchers
+
+OUTPUT FORMAT:
+Host: [Introduction and context]
+Co-host: [Key findings and definitions]
+Host: [Contradictions and challenges]
+Co-host: [Examples and applications]
+Host: [Evolution and extensions]
+Co-host: [Synthesis and summary]
+Host: [Closing thoughts and next steps]"""
+
+    try:
+        return gemini_complete(
+            system_prompt="You are a podcast script writer creating engaging research content.",
+            user_prompt=podcast_prompt
+        )
+    except:
+        # Fallback script if Gemini fails
+        return f"""Host: Welcome to Research Insights! Today we're exploring the concept from your selected text.
+
+Co-host: Based on your document library, we found some fascinating connections across multiple research papers.
+
+Host: Let's dive into the key findings and see how different sources define and approach this concept.
+
+Co-host: We'll also explore any contradictions, examples, and how the concept has evolved over time.
+
+Host: Stay tuned for actionable insights that could shape your research direction!"""
 
 def build_insights_payload(current_pdf: str, selection: str, snippets: List[Dict[str, Any]], insights: str, podcast_script: str):
     return {
@@ -44,5 +128,17 @@ def build_insights_payload(current_pdf: str, selection: str, snippets: List[Dict
         "selected_text": selection,
         "related_sections": snippets,
         "insights_text": insights,
-        "podcast_script": podcast_script
+        "podcast_script": podcast_script,
+        "analysis_metadata": {
+            "total_documents_analyzed": len(set(s['pdf'] for s in snippets)),
+            "insight_categories": [
+                "Definitions & Core Concepts",
+                "Contradictory Findings & Challenges", 
+                "Examples & Applications",
+                "Evolution & Extensions",
+                "Synthesis & Connections"
+            ],
+            "search_scope": "Full document library",
+            "grounding": "Uploaded PDFs only"
+        }
     }

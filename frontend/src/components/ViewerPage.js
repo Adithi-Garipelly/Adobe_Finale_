@@ -153,8 +153,42 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
     }
   }
 
+  // Parse structured insights
+  const parseInsights = (insightsText) => {
+    const sections = {
+      definitions: "",
+      contradictions: "",
+      examples: "",
+      evolution: "",
+      synthesis: ""
+    };
+    
+    const lines = insightsText.split('\n');
+    let currentSection = "";
+    
+    for (const line of lines) {
+      if (line.includes('DEFINITIONS & CORE CONCEPTS')) {
+        currentSection = "definitions";
+      } else if (line.includes('CONTRADICTORY FINDINGS & CHALLENGES')) {
+        currentSection = "contradictions";
+      } else if (line.includes('EXAMPLES & APPLICATIONS')) {
+        currentSection = "examples";
+      } else if (line.includes('EVOLUTION & EXTENSIONS')) {
+        currentSection = "evolution";
+      } else if (line.includes('SYNTHESIS & CONNECTIONS')) {
+        currentSection = "synthesis";
+      } else if (currentSection && line.trim()) {
+        sections[currentSection] += line + '\n';
+      }
+    }
+    
+    return sections;
+  };
+
+  const insights = result ? parseInsights(result.insights_text) : null;
+
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 400px", height: "100vh" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 450px", height: "100vh" }}>
       <div style={{ padding: 12 }}>
         <button onClick={onBack}>← Back</button>
         <div
@@ -171,15 +205,15 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
         )}
       </div>
 
-      {/* Right Panel: Chat + Insights */}
+      {/* Right Panel: Chat + Research Insights */}
       <div style={{ borderLeft: "1px solid #eee", padding: 12, overflowY: "auto" }}>
         {/* Chat Section */}
         <div style={{ marginBottom: 24, padding: 16, background: "#f8f9fa", borderRadius: 8 }}>
-          <h3>💬 Chat with PDF</h3>
+          <h3>💬 Quick Question</h3>
           <div style={{ marginBottom: 12 }}>
             <input
               type="text"
-              placeholder="Ask a question about this PDF..."
+              placeholder="Ask a quick question about this PDF..."
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               style={{ 
@@ -203,7 +237,7 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
                 cursor: "pointer"
               }}
             >
-              {chatLoading ? "Thinking..." : "Ask Question"}
+              {chatLoading ? "Thinking..." : "Ask"}
             </button>
           </div>
           
@@ -222,7 +256,7 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
               
               {audioUrl && (
                 <div>
-                  <h5>🔊 Audio Answer:</h5>
+                  <h5>🔊 Audio:</h5>
                   <audio controls src={audioUrl} style={{ width: "100%" }} />
                 </div>
               )}
@@ -230,59 +264,199 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
           )}
         </div>
 
-        {/* Insights Section */}
+        {/* Research Insights Section */}
         <div style={{ marginBottom: 12 }}>
-          <h3>🧠 Text Analysis</h3>
-          <label>Paste selection (fallback if text selection isn't detected):</label>
+          <h3>🧠 Research Insights</h3>
+          <p style={{ fontSize: "14px", color: "#666", marginBottom: 16 }}>
+            Select text in the PDF to analyze across your entire document library
+          </p>
+          
+          <label>Manual Text Input (if selection doesn't work):</label>
           <textarea
-            rows={5}
+            rows={4}
             value={manualText}
             onChange={(e) => setManualText(e.target.value)}
-            style={{ width: "100%" }}
+            style={{ width: "100%", marginBottom: 8 }}
             placeholder="Paste text here, then click Analyze"
           />
           <button disabled={!manualText || loading} onClick={() => analyze(manualText)}>
-            {loading ? "Analyzing..." : "Analyze"}
+            {loading ? "Analyzing..." : "Analyze Text"}
           </button>
         </div>
 
-        {result && (
-          <>
-            <div>
-              <strong>Current PDF:</strong> {result.current_pdf}
+        {/* Structured Insights Display */}
+        {result && insights && (
+          <div style={{ marginTop: 20 }}>
+            <div style={{ marginBottom: 16 }}>
+              <strong>📄 Current PDF:</strong> {result.current_pdf}
               <br />
-              <strong>Selected Text:</strong>
-              <div style={{ whiteSpace: "pre-wrap", background: "#fafafa", padding: 8, border: "1px solid #eee" }}>
+              <strong>🔍 Selected Text:</strong>
+              <div style={{ 
+                whiteSpace: "pre-wrap", 
+                background: "#f8f9fa", 
+                padding: 8, 
+                border: "1px solid #eee",
+                fontSize: "13px",
+                maxHeight: "100px",
+                overflowY: "auto"
+              }}>
                 {result.selected_text}
               </div>
             </div>
 
-            <h4>Relevant Sections Across PDFs</h4>
-            <ul>
-              {result.related_sections.map((r, i) => (
-                <li key={i} style={{ marginBottom: 8 }}>
-                  <div><strong>{r.pdf}</strong> — {r.heading}</div>
-                  <div>Pages: {r.page_start}-{r.page_end}</div>
-                  <div style={{ fontStyle: "italic" }}>{r.snippet}</div>
-                </li>
-              ))}
-            </ul>
-
-            <h4>Insights & Podcast Script</h4>
-            <pre style={{ whiteSpace: "pre-wrap", background: "#f6f6f6", padding: 8 }}>
-{result.insights_text}
-            </pre>
-
-            <button onClick={generatePodcast}>Generate Podcast (Azure TTS)</button>
-            {result.podcast && (
-              <>
-                <h4>Podcast</h4>
-                <audio controls src={`${apiBase}${result.podcast}`} />
-                <h5>Transcript</h5>
-                <pre style={{ whiteSpace: "pre-wrap" }}>{result.transcript}</pre>
-              </>
+            {/* Analysis Metadata */}
+            {result.analysis_metadata && (
+              <div style={{ 
+                background: "#e3f2fd", 
+                padding: 12, 
+                borderRadius: 6, 
+                marginBottom: 16,
+                fontSize: "13px"
+              }}>
+                <strong>📊 Analysis Summary:</strong><br/>
+                • Documents analyzed: {result.analysis_metadata.total_documents_analyzed}<br/>
+                • Search scope: {result.analysis_metadata.search_scope}<br/>
+                • Grounding: {result.analysis_metadata.grounding}
+              </div>
             )}
-          </>
+
+            {/* Related Sections */}
+            <h4>📚 Related Sections Across Documents</h4>
+            <div style={{ maxHeight: "200px", overflowY: "auto", marginBottom: 16 }}>
+              {result.related_sections.map((r, i) => (
+                <div key={i} style={{ 
+                  background: "#f8f9fa", 
+                  padding: 8, 
+                  marginBottom: 8, 
+                  borderRadius: 4,
+                  borderLeft: "3px solid #007bff"
+                }}>
+                  <div><strong>{r.pdf}</strong> — {r.heading}</div>
+                  <div style={{ fontSize: "12px", color: "#666" }}>Pages: {r.page_start}-{r.page_end}</div>
+                  <div style={{ fontStyle: "italic", fontSize: "13px" }}>{r.snippet}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Structured Insights */}
+            <h4>🔍 Cross-Document Insights</h4>
+            
+            {insights.definitions && (
+              <div style={{ marginBottom: 16 }}>
+                <h5 style={{ color: "#2e7d32", marginBottom: 8 }}>📖 Definitions & Core Concepts</h5>
+                <div style={{ 
+                  background: "#f1f8e9", 
+                  padding: 12, 
+                  borderRadius: 4,
+                  fontSize: "13px",
+                  whiteSpace: "pre-wrap"
+                }}>
+                  {insights.definitions.trim()}
+                </div>
+              </div>
+            )}
+
+            {insights.contradictions && (
+              <div style={{ marginBottom: 16 }}>
+                <h5 style={{ color: "#d32f2f", marginBottom: 8 }}>⚠️ Contradictions & Challenges</h5>
+                <div style={{ 
+                  background: "#ffebee", 
+                  padding: 12, 
+                  borderRadius: 4,
+                  fontSize: "13px",
+                  whiteSpace: "pre-wrap"
+                }}>
+                  {insights.contradictions.trim()}
+                </div>
+              </div>
+            )}
+
+            {insights.examples && (
+              <div style={{ marginBottom: 16 }}>
+                <h5 style={{ color: "#1976d2", marginBottom: 8 }}>💡 Examples & Applications</h5>
+                <div style={{ 
+                  background: "#e3f2fd", 
+                  padding: 12, 
+                  borderRadius: 4,
+                  fontSize: "13px",
+                  whiteSpace: "pre-wrap"
+                }}>
+                  {insights.examples.trim()}
+                </div>
+              </div>
+            )}
+
+            {insights.evolution && (
+              <div style={{ marginBottom: 16 }}>
+                <h5 style={{ color: "#7b1fa2", marginBottom: 8 }}>🚀 Evolution & Extensions</h5>
+                <div style={{ 
+                  background: "#f3e5f5", 
+                  padding: 12, 
+                  borderRadius: 4,
+                  fontSize: "13px",
+                  whiteSpace: "pre-wrap"
+                }}>
+                  {insights.evolution.trim()}
+                </div>
+              </div>
+            )}
+
+            {insights.synthesis && (
+              <div style={{ marginBottom: 16 }}>
+                <h5 style={{ color: "#f57c00", marginBottom: 8 }}>🔗 Synthesis & Connections</h5>
+                <div style={{ 
+                  background: "#fff3e0", 
+                  padding: 12, 
+                  borderRadius: 4,
+                  fontSize: "13px",
+                  whiteSpace: "pre-wrap"
+                }}>
+                  {insights.synthesis.trim()}
+                </div>
+              </div>
+            )}
+
+            {/* Podcast Generation */}
+            <div style={{ marginTop: 20, padding: 16, background: "#f8f9fa", borderRadius: 8 }}>
+              <h4>🎙️ Generate Research Podcast</h4>
+              <p style={{ fontSize: "13px", color: "#666", marginBottom: 12 }}>
+                Convert insights into an engaging audio summary
+              </p>
+              <button 
+                onClick={generatePodcast}
+                style={{
+                  background: "#28a745",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 20px",
+                  borderRadius: 4,
+                  cursor: "pointer"
+                }}
+              >
+                🎙️ Create Podcast
+              </button>
+              
+              {result.podcast && (
+                <div style={{ marginTop: 16 }}>
+                  <h5>🎧 Your Research Podcast:</h5>
+                  <audio controls src={`${apiBase}${result.podcast}`} style={{ width: "100%" }} />
+                  <h6>📝 Transcript:</h6>
+                  <div style={{ 
+                    background: "white", 
+                    padding: 12, 
+                    borderRadius: 4, 
+                    border: "1px solid #ddd",
+                    fontSize: "12px",
+                    maxHeight: "150px",
+                    overflowY: "auto",
+                    whiteSpace: "pre-wrap"
+                  }}>
+                    {result.transcript}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>
