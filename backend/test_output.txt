@@ -1,0 +1,4 @@
+Podcast Script:
+This is a test script.
+
+Note: Audio generation failed. This is a text transcript.

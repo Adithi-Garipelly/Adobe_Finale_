@@ -1,0 +1,4 @@
+Podcast Script:
+This is a test podcast script for testing the updated TTS functionality.
+
+Note: Audio generation failed. This is a text transcript.
