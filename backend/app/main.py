@@ -4,6 +4,7 @@ from typing import List, Optional, Dict, Any
 from fastapi import FastAPI, UploadFile, File, HTTPException, Query, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 # Load environment variables from .env file
@@ -126,6 +127,9 @@ def generate_podcast(req: PodcastReq):
         provider=TTS_PROVIDER  # "azure"
     )
     return {"audio": f"/files/{out_name}", "transcript": req.script}
+
+# Mount static files for audio
+app.mount("/files/audio", StaticFiles(directory="data/audio"), name="audio")
 
 # Include podcast router
 app.include_router(podcast_router, prefix="/podcast", tags=["podcast"])
