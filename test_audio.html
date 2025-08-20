@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Test</title>
+</head>
+<body>
+    <h1>Audio Player Test</h1>
+    <p>Testing if the podcast audio loads correctly from the backend</p>
+    
+    <h2>Test 1: Direct MP3 URL</h2>
+    <audio controls style="width: 100%; margin: 20px 0;">
+        <source src="http://localhost:8080/files/podcast_5748d4fff14b4eddb5cc63875441e703.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <h2>Test 2: Another MP3 URL</h2>
+    <audio controls style="width: 100%; margin: 20px 0;">
+        <source src="http://localhost:8080/files/podcast_8aa529851ae942d3a8cbe93b8b41e846.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <h2>Test 3: Audio with Error Handling</h2>
+    <audio 
+        controls 
+        style="width: 100%; margin: 20px 0;"
+        onLoadStart="console.log('Audio loading started')"
+        onCanPlay="console.log('Audio can play')"
+        onError="console.error('Audio error:', event)"
+        onLoadedMetadata="console.log('Audio metadata loaded')"
+    >
+        <source src="http://localhost:8080/files/podcast_5748d4fff14b4eddb5cc63875441e703.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <script>
+        console.log('Test page loaded');
+        
+        // Test if we can fetch the audio file
+        fetch('http://localhost:8080/files/podcast_5748d4fff14b4eddb5cc63875441e703.mp3')
+            .then(response => {
+                console.log('Fetch response:', response);
+                console.log('Content-Type:', response.headers.get('content-type'));
+                console.log('Content-Length:', response.headers.get('content-length'));
+                console.log('CORS Origin:', response.headers.get('access-control-allow-origin'));
+                return response.blob();
+            })
+            .then(blob => {
+                console.log('Audio blob size:', blob.size);
+                console.log('Audio blob type:', blob.type);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    </script>
+</body>
+</html>

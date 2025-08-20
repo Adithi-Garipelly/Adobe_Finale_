@@ -1,3 +1,12 @@
+# Environment variables and secrets
+.env
+.env.local
+.env.backup
+*.env
+credentials/
+*.json
+temp_key.txt
+
 # Python
 __pycache__/
 *.py[cod]
@@ -22,12 +31,11 @@ wheels/
 MANIFEST
 
 # Virtual environments
-.env
-.venv
-env/
+.venv/
 venv/
 ENV/
-env.bak/
+env/
+.venv.bak/
 venv.bak/
 
 # Node.js
@@ -35,28 +43,97 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
 
-# React
-build/
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Data and outputs
-data/uploads/*
-data/transcripts/*
-output/
-*.log
-*.pyc
+# React build
+frontend/build/
+frontend/dist/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+
+# Logs
+*.log
+logs/
+uvicorn.log
+
+# Audio files (generated)
+*.mp3
+*.wav
+*.m4a
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# Docker
+.dockerignore
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/

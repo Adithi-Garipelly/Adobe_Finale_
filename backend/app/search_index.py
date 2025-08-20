@@ -53,20 +53,28 @@ class DocIndex:
 
             # Split into sections using heading heuristics (Round 1A-ish)
             split_sections = self._split_into_sections(full_text)
-            for s in split_sections:
-                emb = self._embed([s["text"]])[0]
-                secs.append(Section(
-                    pdf_name=name,
-                    heading=s["heading"],
-                    page_start=s["page_start"],
-                    page_end=s["page_end"],
-                    text=s["text"],
-                    vector=emb
-                ))
+            
+            # Batch embed all sections at once (much faster)
+            if split_sections:
+                texts = [s["text"] for s in split_sections]
+                embeddings = self._embed(texts)
+                
+                for i, s in enumerate(split_sections):
+                    secs.append(Section(
+                        pdf_name=name,
+                        heading=s["heading"],
+                        page_start=s["page_start"],
+                        page_end=s["page_end"],
+                        text=s["text"],
+                        vector=embeddings[i]
+                    ))
+        
         # Merge & rebuild FAISS
         if secs:
             self.sections.extend(secs)
             self._rebuild_faiss()
+
+
 
     def search_sections(self, query: str, top_k: int = 5, exclude_pdf: Optional[str] = None):
         if not self.sections:

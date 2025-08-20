@@ -82,45 +82,66 @@ Focus on academic quality and research insights."""
 def _create_podcast_script(selection: str, insights: str, related: List[Dict[str, Any]]) -> str:
     """Create an engaging podcast script from the insights"""
     
-    podcast_prompt = f"""Create an engaging 2-3 minute podcast script from these research insights.
+    podcast_prompt = f"""Create an engaging, interactive 3-5 minute research podcast transcript from these insights.
 
 SELECTED TEXT: {selection}
 
 INSIGHTS: {insights}
 
 REQUIREMENTS:
-- Format as a conversation between Host and Co-host
-- Make it engaging and educational
-- Structure: Intro → Key Findings → Contradictions → Examples → Summary
-- Use natural, conversational language
+- Create a natural, conversational two-person podcast dialogue
+- Make it engaging, educational, and smooth-flowing
+- Structure: 
+  * Hook & Introduction (30 seconds)
+  * Key Findings & Definitions (1-1.5 minutes)
+  * Contradictions & Challenges (1-1.5 minutes)
+  * Examples & Applications (1-1.5 minutes)
+  * Synthesis & Future Directions (30 seconds)
+- Use natural, conversational language with research enthusiasm
 - Include specific document references when relevant
-- End with actionable insights for researchers
+- Add engaging transitions and questions between speakers
+- End with actionable insights and next steps for researchers
+- Make it sound like a professional research podcast
+- Ensure smooth conversation flow without abrupt transitions
+- If content is too short, expand conversation naturally (but don't add new technical content)
 
 OUTPUT FORMAT:
-Host: [Introduction and context]
-Co-host: [Key findings and definitions]
-Host: [Contradictions and challenges]
-Co-host: [Examples and applications]
-Host: [Evolution and extensions]
-Co-host: [Synthesis and summary]
-Host: [Closing thoughts and next steps]"""
+Create a natural conversation flow between two hosts discussing the research. Use simple speaker labels like "Sarah:" and "Alex:" without stage directions or formatting markers. Make it sound like a real podcast conversation.
+
+CRITICAL: DO NOT include any stage directions like "(Intro Music fades in and out)", "(Outro Music fades in)", or any text in parentheses. Only include the actual spoken conversation between Sarah and Alex."""
 
     try:
         return gemini_complete(
-            system_prompt="You are a podcast script writer creating engaging research content.",
+            system_prompt="You are an expert podcast transcript writer specializing in academic research content. Create natural, conversational transcripts that make complex research accessible and exciting. Focus on smooth dialogue flow, remove stage directions, use simple speaker labels (Sarah: and Alex:), and ensure the conversation sounds like a real podcast. Keep it engaging and conversational without being overly formal.",
             user_prompt=podcast_prompt
         )
     except:
-        # Fallback script if Gemini fails
-        return f"""Host: Welcome to Research Insights! Today we're exploring the concept from your selected text.
+        # Enhanced fallback script if Gemini fails
+        return f"""Sarah: Welcome to Research Insights, where we dive deep into the latest academic discoveries! I'm Sarah, and today we're exploring a fascinating concept from your research.
 
-Co-host: Based on your document library, we found some fascinating connections across multiple research papers.
+Alex: Hi everyone! I'm Alex, and I'm excited to break down this concept across multiple research papers. What we found is absolutely fascinating!
 
-Host: Let's dive into the key findings and see how different sources define and approach this concept.
+Sarah: Absolutely! So, we're looking at the concept from your selected text, and Alex, what are the key findings across these documents?
 
-Co-host: We'll also explore any contradictions, examples, and how the concept has evolved over time.
+Alex: Great question! Based on your document library, we've discovered some incredible connections. The concept appears in multiple contexts, each adding a unique perspective to our understanding.
 
-Host: Stay tuned for actionable insights that could shape your research direction!"""
+Sarah: That's intriguing! And what about contradictions or challenges? Research isn't always straightforward, right?
+
+Alex: Exactly! We found some fascinating contradictions that actually highlight important research gaps. Different methodologies and contexts lead to varying conclusions.
+
+Sarah: Perfect! Now let's talk examples and applications. What practical insights can researchers take away?
+
+Alex: Excellent point! We identified several concrete examples and use cases that demonstrate how this concept works in practice.
+
+Sarah: And what about the future? Where is this research heading?
+
+Alex: That's the exciting part! We're seeing emerging trends and new applications that suggest this field is evolving rapidly.
+
+Sarah: Amazing! So what should researchers do next? What are our actionable takeaways?
+
+Alex: Great question! Based on our analysis, researchers should focus on bridging the gaps we identified and exploring the emerging applications we discovered.
+
+Sarah: Perfect! This has been an incredible deep-dive into cross-document research insights. Thanks for joining us, and happy researching!"""
 
 def build_insights_payload(current_pdf: str, selection: str, snippets: List[Dict[str, Any]], insights: str, podcast_script: str):
     return {

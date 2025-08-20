@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
-import PodcastGenerator from "./PodcastGenerator";
 
 const ADOBE_KEY = process.env.REACT_APP_ADOBE_EMBED_API_KEY; // put in .env
 const SDK_URL = "https://documentcloud.adobe.com/view-sdk/main.js";
@@ -24,11 +23,13 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
     setLoading(true);
     setResult(null);
     try {
-      const { data } = await axios.post(`${apiBase}/analyze_selection`, {
+      const response = await axios.post(`${apiBase}/analyze_selection`, {
         current_pdf: fileName,
         selected_text: text,
         max_sections: 5,
       });
+      const data = response.data;
+      console.log("Analysis response:", data); // Debug log
       setResult(data);
     } catch (e) {
       console.error(e);
@@ -141,16 +142,32 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
   }, [adobeReady, apiBase, fileName, analyze]);
 
   async function generatePodcast() {
-    if (!result?.podcast_script) return;
+    console.log("generatePodcast called, result:", result); // Debug log
+    
+    // Check if we have insights text to work with
+    if (!result?.insights_text) {
+      alert("Please analyze text first to generate insights before creating a podcast.");
+      return;
+    }
+    
+    // If no podcast script, create one from insights
+    let scriptToUse = result.podcast_script;
+    if (!scriptToUse) {
+      scriptToUse = `Research Insights Podcast:\n\n${result.insights_text}\n\nThis podcast covers the key findings and insights from your selected text.`;
+    }
+    
     try {
-      const { data } = await axios.post(`${apiBase}/generate_podcast`, {
-        script: result.podcast_script,
+      console.log("Calling generate_podcast with script:", scriptToUse); // Debug log
+      const response = await axios.post(`${apiBase}/generate_podcast`, {
+        script: scriptToUse,
         speaker_mode: "duo",
       });
+      const data = response.data;
+      console.log("Podcast generation response:", data); // Debug log
       setResult((r) => ({ ...r, podcast: data.audio, transcript: data.transcript }));
     } catch (e) {
-      console.error(e);
-      alert("Podcast generation failed");
+      console.error("Podcast generation error:", e);
+      alert("Podcast generation failed: " + e.message);
     }
   }
 
@@ -417,13 +434,7 @@ export default function ViewerPage({ apiBase, fileName, onBack }) {
               </div>
             )}
 
-            {/* Enhanced Podcast Generation */}
-            <PodcastGenerator 
-              insights={result.analysis_metadata} 
-              apiBase={apiBase}
-            />
-            
-            {/* Original Podcast Generation */}
+            {/* Podcast Generation */}
             <div style={{ marginTop: 20, padding: 16, background: "#f8f9fa", borderRadius: 8 }}>
               <h4>🎙️ Generate Research Podcast</h4>
               <p style={{ fontSize: "13px", color: "#666", marginBottom: 12 }}>

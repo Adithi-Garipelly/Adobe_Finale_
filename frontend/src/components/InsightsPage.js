@@ -123,7 +123,7 @@ function InsightsPage({ selectedText, selectedFile, onGeneratePodcast, onBack })
       try {
         setIsGenerating(true);
         
-        const response = await fetch('http://localhost:8000/selection/analyze', {
+        const response = await fetch('http://localhost:8080/selection/analyze', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -68,15 +68,15 @@ async def health_check():
         from .indexer import get_index
         index = get_index()
         stats = index.get_stats()
-        return {
-            "status": "healthy",
+    return {
+        "status": "healthy",
             "service": "Document Insight & Engagement System",
             "version": "2.0.0",
             "index_stats": stats
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}")
-        return {
+    return {
             "status": "unhealthy",
             "error": str(e)
         }
@@ -219,7 +219,7 @@ async def generate_podcast(request: PodcastRequest):
             return result
         else:
             raise HTTPException(status_code=500, detail=result.get("error", "Podcast generation failed"))
-            
+        
     except Exception as e:
         logger.error(f"Error generating podcast: {e}")
         raise HTTPException(status_code=500, detail=str(e))

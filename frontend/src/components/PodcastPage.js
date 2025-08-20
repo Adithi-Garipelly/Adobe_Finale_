@@ -181,8 +181,8 @@ function PodcastPage({ podcastData, selectedText, insights, onBack, onBackToView
     );
   }
 
-  const audioUrl = `http://localhost:8000${podcastData.mp3_url}`;
-  const transcriptUrl = `http://localhost:8000${podcastData.transcript_url}`;
+  const audioUrl = `http://localhost:8080${podcastData.mp3_url}`;
+const transcriptUrl = `http://localhost:8080${podcastData.transcript_url}`;
 
   return (
     <PageContainer>

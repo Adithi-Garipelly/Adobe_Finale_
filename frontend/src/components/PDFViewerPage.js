@@ -379,12 +379,12 @@ function PDFViewerPage({ file, isLoading: externalLoading, onTextSelection, onBa
       } else if (currentFile.backendPath) {
         // Use backend path if available
         const encodedFilename = encodeURIComponent(currentFile.backendPath);
-        url = `http://localhost:8000/uploads/${encodedFilename}`;
+        url = `http://localhost:8080/uploads/${encodedFilename}`;
         console.log('📄 Using backend path URL:', url);
       } else if (currentFile.name) {
         // For file objects with name
         const encodedFilename = encodeURIComponent(currentFile.name);
-        url = `http://localhost:8000/uploads/${encodedFilename}`;
+        url = `http://localhost:8080/uploads/${encodedFilename}`;
         console.log('📄 Using name-based URL:', url);
       } else {
         throw new Error('Invalid file object');

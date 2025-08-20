@@ -5,17 +5,21 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, Query, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+import os
 from pydantic import BaseModel
 
 # Load environment variables from .env file
 from dotenv import load_dotenv
+import os
+
+# Load .env from the backend directory (current working directory when running uvicorn)
 load_dotenv()
 
 from .search_index import DocIndex
 from .insights import build_insights_payload, generate_insights_from_selection
 from .tts import synthesize_podcast
 from .llm_adapter import gemini_complete
-from .podcast import router as podcast_router
 
 # ---------- ENV ----------
 ADOBE_EMBED_API_KEY = os.getenv("ADOBE_EMBED_API_KEY", "")
@@ -38,7 +42,13 @@ app.add_middleware(
 )
 
 # ---------- GLOBAL INDEX ----------
-index = DocIndex(storage_dir=UPLOAD_DIR)
+_index = None
+
+def get_index():
+    global _index
+    if _index is None:
+        _index = DocIndex(storage_dir=UPLOAD_DIR)
+    return _index
 
 # ---------- MODELS ----------
 class AnalyzeSelectionReq(BaseModel):
@@ -57,10 +67,10 @@ class ChatQuery(BaseModel):
 # ---------- ROUTES ----------
 @app.get("/health")
 def health():
-    return {"status": "ok", "pdf_count": len(index.documents)}
+    return {"status": "ok", "pdf_count": len(get_index().documents)}
 
 @app.post("/upload")
-async def upload(files: List[UploadFile] = File(...)):
+async def upload(files: List[UploadFile] = File(..., alias="files")):
     if len(files) == 0:
         raise HTTPException(400, "No files provided.")
     if len(files) > 50:
@@ -76,13 +86,24 @@ async def upload(files: List[UploadFile] = File(...)):
             w.write(await f.read())
         saved.append(safe_name)
 
-    # (Re)index new PDFs incrementally
-    index.add_pdfs([os.path.join(UPLOAD_DIR, s) for s in saved])
-    return {"files": saved}
+    # Return immediately, index in background
+    import asyncio
+    asyncio.create_task(index_pdfs_async(saved))
+    
+    return {"files": saved, "message": "Files uploaded successfully. Indexing in background..."}
+
+async def index_pdfs_async(saved_files: List[str]):
+    """Index PDFs asynchronously without blocking the upload response"""
+    try:
+        paths = [os.path.join(UPLOAD_DIR, s) for s in saved_files]
+        get_index().add_pdfs(paths)
+        print(f"✅ Indexed {len(saved_files)} PDFs in background")
+    except Exception as e:
+        print(f"❌ Background indexing failed: {e}")
 
 @app.get("/files")
 def list_files():
-    return {"files": sorted(index.list_pdf_names())}
+    return {"files": sorted(get_index().list_pdf_names())}
 
 @app.get("/files/{filename}")
 def get_file(filename: str):
@@ -90,16 +111,29 @@ def get_file(filename: str):
     path = os.path.join(UPLOAD_DIR, safe)
     if not os.path.isfile(path):
         raise HTTPException(404, "File not found.")
+    
+    # Determine correct media type based on file extension
+    if filename.lower().endswith('.pdf'):
+        media_type = "application/pdf"
+    elif filename.lower().endswith('.mp3'):
+        media_type = "audio/mpeg"
+    elif filename.lower().endswith('.wav'):
+        media_type = "audio/wav"
+    else:
+        media_type = "application/octet-stream"
+    
     # Ensure CORS works: FastAPI static file response
-    return FileResponse(path, media_type="application/pdf", filename=safe)
+    return FileResponse(path, media_type=media_type, filename=safe)
+
+
 
 @app.post("/analyze_selection")
 def analyze_selection(req: AnalyzeSelectionReq):
     # 1) semantic search for relevant sections (excluding current_pdf if you want)
-    results = index.search_sections(req.selected_text, top_k=req.max_sections, exclude_pdf=req.current_pdf)
+    results = get_index().search_sections(req.selected_text, top_k=req.max_sections, exclude_pdf=req.current_pdf)
 
     # 2) pick 2–4 sentence snippets per section
-    snippets = index.make_snippets(results)
+    snippets = get_index().make_snippets(results)
 
     # 3) insights with Gemini (grounded strictly on snippets)
     insights, podcast_script = generate_insights_from_selection(
@@ -127,12 +161,6 @@ def generate_podcast(req: PodcastReq):
         provider=TTS_PROVIDER  # "azure"
     )
     return {"audio": f"/files/{out_name}", "transcript": req.script}
-
-# Mount static files for audio
-app.mount("/files/audio", StaticFiles(directory="data/audio"), name="audio")
-
-# Include podcast router
-app.include_router(podcast_router, prefix="/podcast", tags=["podcast"])
 
 # ---------- NEW CHAT ENDPOINTS ----------
 @app.post("/chat/ask")
@@ -175,3 +203,15 @@ async def speak_answer(text: str = Form(...)):
         
     except Exception as e:
         raise HTTPException(500, f"Error generating speech: {str(e)}")
+
+# ---------- TTS STATUS ROUTE ----------
+@app.get("/tts/status")
+def get_tts_status():
+    """Get TTS configuration status for debugging"""
+    from .tts import tts_status
+    return tts_status()
+
+# ---------- STATIC FILES ----------
+# Mount frontend build files AFTER all API routes to avoid conflicts
+if os.path.exists("frontend-build"):
+    app.mount("/", StaticFiles(directory="frontend-build", html=True), name="static")

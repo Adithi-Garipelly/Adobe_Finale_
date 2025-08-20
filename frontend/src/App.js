@@ -4,7 +4,7 @@ import LibraryPage from "./components/LibraryPage";
 import ViewerPage from "./components/ViewerPage";
 import axios from "axios";
 
-const API = process.env.REACT_APP_API || "http://localhost:8000";
+const API = process.env.REACT_APP_API || "http://localhost:8080";
 
 export default function App() {
   const [page, setPage] = useState("upload");

@@ -14,7 +14,7 @@ export const APIProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const API_BASE_URL = 'http://localhost:8000/api';
+  const API_BASE_URL = 'http://localhost:8080/api';
 
   const uploadFiles = async (files) => {
     setLoading(true);
